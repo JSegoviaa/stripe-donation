@@ -1,21 +1,19 @@
-const express = require('express');
+const express = require("express");
+require("dotenv").config();
 const app = express();
 
-const stripe = require('stripe')(
-  'sk_test_51JaTznCGqe3RvXVDn9Hj9XKJFptPF97YIdCUipNFQFkilIpPiHXb9QDkao19oEHQatkY8HAWo6WZm0F6GrPpe8Mv00hhq1gz9W'
-);
+const stripe = require("stripe")(process.env.PRIVATE);
 
-app.use(express.static('public'));
+app.use(express.static("public"));
 app.use(express.json());
 
-app.post('/create-payment-intent', async (req, res) => {
+app.post("/create-payment-intent", async (req, res) => {
   const { donacion } = req.body;
-
   const cantidad = parseInt(donacion * 100);
   try {
     const paymentIntent = await stripe.paymentIntents.create({
       amount: cantidad,
-      currency: 'mxn',
+      currency: "mxn",
       automatic_payment_methods: {
         enabled: true,
       },
@@ -29,4 +27,6 @@ app.post('/create-payment-intent', async (req, res) => {
   }
 });
 
-app.listen(4242, () => console.log('Node server listening on port 4242!'));
+app.listen(process.env.PORT, () =>
+  console.log("Node server listening on port " + process.env.PORT)
+);

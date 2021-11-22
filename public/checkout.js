@@ -1,33 +1,33 @@
 const stripe = Stripe(
-  'pk_test_51JaTznCGqe3RvXVDQxhEnjQ1bLyso24Cy7whGP7B39Y2a8qCZEsEHEtCi1zxSfx0XbWiAUfqW10HbeCiyg4phaTy00Qu5iDasP'
+  "pk_test_51JaTznCGqe3RvXVDQxhEnjQ1bLyso24Cy7whGP7B39Y2a8qCZEsEHEtCi1zxSfx0XbWiAUfqW10HbeCiyg4phaTy00Qu5iDasP"
 );
 
 let elements;
 
-const donacion = localStorage.getItem('donacion');
+const donacion = localStorage.getItem("donacion");
 initialize();
 checkStatus();
 
 document
-  .querySelector('#payment-form')
-  .addEventListener('submit', handleSubmit);
+  .querySelector("#payment-form")
+  .addEventListener("submit", handleSubmit);
 
 // Fetches a payment intent and captures the client secret
 async function initialize() {
-  const response = await fetch('/create-payment-intent', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+  const response = await fetch("/create-payment-intent", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ donacion }),
   });
   const { clientSecret } = await response.json();
 
   const appearance = {
-    theme: 'stripe',
+    theme: "stripe",
   };
   elements = stripe.elements({ appearance, clientSecret });
 
-  const paymentElement = elements.create('payment');
-  paymentElement.mount('#payment-element');
+  const paymentElement = elements.create("payment");
+  paymentElement.mount("#payment-element");
 }
 
 async function handleSubmit(e) {
@@ -38,7 +38,7 @@ async function handleSubmit(e) {
     elements,
     confirmParams: {
       // Make sure to change this to your payment completion page
-      return_url: 'http://localhost:4242/checkout.html',
+      return_url: "http://localhost:4242/checkout.html",
     },
   });
 
@@ -47,10 +47,10 @@ async function handleSubmit(e) {
   // your `return_url`. For some payment methods like iDEAL, your customer will
   // be redirected to an intermediate site first to authorize the payment, then
   // redirected to the `return_url`.
-  if (error.type === 'card_error' || error.type === 'validation_error') {
+  if (error.type === "card_error" || error.type === "validation_error") {
     showMessage(error.message);
   } else {
-    showMessage('An unexpected error occured.');
+    showMessage("An unexpected error occured.");
   }
 
   setLoading(false);
@@ -59,7 +59,7 @@ async function handleSubmit(e) {
 // Fetches the payment intent status after payment submission
 async function checkStatus() {
   const clientSecret = new URLSearchParams(window.location.search).get(
-    'payment_intent_client_secret'
+    "payment_intent_client_secret"
   );
 
   if (!clientSecret) {
@@ -69,17 +69,17 @@ async function checkStatus() {
   const { paymentIntent } = await stripe.retrievePaymentIntent(clientSecret);
 
   switch (paymentIntent.status) {
-    case 'succeeded':
-      showMessage('Payment succeeded!');
+    case "succeeded":
+      showMessage("Payment succeeded!");
       break;
-    case 'processing':
-      showMessage('Your payment is processing.');
+    case "processing":
+      showMessage("Your payment is processing.");
       break;
-    case 'requires_payment_method':
-      showMessage('Your payment was not successful, please try again.');
+    case "requires_payment_method":
+      showMessage("Your payment was not successful, please try again.");
       break;
     default:
-      showMessage('Something went wrong.');
+      showMessage("Something went wrong.");
       break;
   }
 }
@@ -87,14 +87,14 @@ async function checkStatus() {
 // ------- UI helpers -------
 
 function showMessage(messageText) {
-  const messageContainer = document.querySelector('#payment-message');
+  const messageContainer = document.querySelector("#payment-message");
 
-  messageContainer.classList.remove('hidden');
+  messageContainer.classList.remove("hidden");
   messageContainer.textContent = messageText;
 
   setTimeout(function () {
-    messageContainer.classList.add('hidden');
-    messageText.textContent = '';
+    messageContainer.classList.add("hidden");
+    messageText.textContent = "";
   }, 4000);
 }
 
@@ -102,12 +102,12 @@ function showMessage(messageText) {
 function setLoading(isLoading) {
   if (isLoading) {
     // Disable the button and show a spinner
-    document.querySelector('#submit').disabled = true;
-    document.querySelector('#spinner').classList.remove('hidden');
-    document.querySelector('#button-text').classList.add('hidden');
+    document.querySelector("#submit").disabled = true;
+    document.querySelector("#spinner").classList.remove("hidden");
+    document.querySelector("#button-text").classList.add("hidden");
   } else {
-    document.querySelector('#submit').disabled = false;
-    document.querySelector('#spinner').classList.add('hidden');
-    document.querySelector('#button-text').classList.remove('hidden');
+    document.querySelector("#submit").disabled = false;
+    document.querySelector("#spinner").classList.add("hidden");
+    document.querySelector("#button-text").classList.remove("hidden");
   }
 }
