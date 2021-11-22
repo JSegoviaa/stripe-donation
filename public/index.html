@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Donación</title>
+  </head>
+  <body>
+    <div>Donación</div>
+    <form id="form">
+      <input
+        type="number"
+        id="donacion"
+        placeholder="Ingrese la cantidad a donar"
+      />
+
+      <button>Continuar</button>
+    </form>
+  </body>
+  <script>
+    const donacion = document.querySelector('#donacion');
+    const form = document.querySelector('#form');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      localStorage.setItem('donacion', donacion.value);
+    });
+
+    console.log(localStorage.getItem('donacion'));
+  </script>
+</html>
