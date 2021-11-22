@@ -3,6 +3,7 @@ require("dotenv").config();
 const app = express();
 var cors = require("cors");
 
+app.use(cors());
 const stripe = require("stripe")(process.env.PRIVATE);
 
 app.use(express.static("public"));
