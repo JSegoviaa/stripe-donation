@@ -9,6 +9,30 @@ const stripe = require("stripe")(process.env.PRIVATE);
 app.use(express.static("public"));
 app.use(express.json());
 
+const monthNames = [
+  "Enero",
+  "Febrero",
+  "Marzo",
+  "Abril",
+  "Mayo",
+  "Junio",
+  "Julio",
+  "Agosto",
+  "Septiembre",
+  "Octubre",
+  "Noviembre",
+  "Diciembre",
+];
+const dateObj = new Date();
+const month = monthNames[dateObj.getMonth()];
+const day = String(dateObj.getDate()).padStart(2, "0");
+const year = dateObj.getFullYear();
+const output = day + " de " + month + " de " + year;
+
+app.get("/despierta-heroku", async (req, res) => {
+  return res.status(200).json({ msg: output });
+});
+
 app.post("/create-payment-intent", async (req, res) => {
   const { donacion } = req.body;
   const cantidad = parseInt(donacion * 100);
